@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Infiltration | Arnav.dev</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #00f3ff;
+            --cyan-glow: rgba(0, 243, 255, 0.5);
+            --magenta: #bc13fe;
+            --green: #00ff88;
+            --red: #ff003c;
+            --dark: #050505;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--dark);
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--cyan);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.12) 2px, rgba(0, 0, 0, 0.12) 4px);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* BACK BTN */
+        #back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: transparent;
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            color: var(--cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        #back-btn:hover {
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 15px var(--cyan-glow);
+        }
+
+        /* BOOT */
+        #boot-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--dark);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        #boot-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 8px;
+            color: var(--cyan);
+            text-shadow: 0 0 30px var(--cyan-glow), 0 0 60px var(--cyan-glow);
+            margin-bottom: 30px;
+            animation: flicker 3s infinite;
+        }
+
+        @keyframes flicker {
+
+            0%,
+            95%,
+            97%,
+            100% {
+                opacity: 1
+            }
+
+            96%,
+            98% {
+                opacity: 0.3
+            }
+        }
+
+        #boot-terminal {
+            width: 600px;
+            max-width: 90vw;
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 4px;
+            padding: 30px;
+        }
+
+        .boot-line {
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: all 0.35s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .boot-line.show {
+            opacity: 1;
+            transform: none;
+        }
+
+        .boot-line .prefix {
+            color: var(--green);
+        }
+
+        .boot-line .text {
+            color: rgba(255, 255, 255, 0.85);
+            flex: 1;
+        }
+
+        .boot-line .s-ok {
+            color: var(--green);
+            white-space: nowrap;
+        }
+
+        .boot-line .s-warn {
+            color: #ffcc00;
+            white-space: nowrap;
+        }
+
+        .boot-line .s-by {
+            color: var(--magenta);
+            white-space: nowrap;
+        }
+
+        .boot-bar {
+            width: 100%;
+            height: 3px;
+            background: rgba(0, 243, 255, 0.1);
+            margin-top: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .boot-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta));
+            transition: width 0.5s;
+            box-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        #start-btn {
+            margin-top: 30px;
+            background: transparent;
+            border: 2px solid var(--cyan);
+            color: var(--cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            padding: 15px 45px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.4s;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #start-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.25), transparent);
+            transition: left 0.5s;
+        }
+
+        #start-btn:hover::before {
+            left: 100%;
+        }
+
+        #start-btn.show {
+            opacity: 1;
+        }
+
+        #start-btn:hover {
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 35px var(--cyan-glow);
+            transform: translateY(-2px);
+        }
+
+        /* GAME */
+        #game-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        #hud {
+            width: 100%;
+            max-width: 960px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 30px 8px;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.08);
+        }
+
+        .hud-block {
+            text-align: center;
+        }
+
+        .hud-label {
+            font-size: 0.6rem;
+            letter-spacing: 3px;
+            color: rgba(0, 243, 255, 0.45);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .hud-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--cyan);
+        }
+
+        #timer-val {
+            color: var(--green);
+        }
+
+        #timer-val.danger {
+            color: var(--red);
+            animation: pred 0.5s infinite alternate;
+        }
+
+        @keyframes pred {
+            from {
+                text-shadow: 0 0 5px var(--red)
+            }
+
+            to {
+                text-shadow: 0 0 25px var(--red), 0 0 40px var(--red)
+            }
+        }
+
+        #network-canvas {
+            flex: 1;
+            width: 100%;
+            max-width: 960px;
+            position: relative;
+            cursor: crosshair;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        #log-bar {
+            width: 100%;
+            max-width: 960px;
+            padding: 10px 30px;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            color: rgba(0, 243, 255, 0.7);
+            min-height: 38px;
+            border-top: 1px solid rgba(0, 243, 255, 0.1);
+            flex-shrink: 0;
+        }
+
+        /* OVERLAY */
+        #overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(6px);
+        }
+
+        #overlay.show {
+            display: flex;
+        }
+
+        #overlay-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            text-shadow: 0 0 30px currentColor;
+            animation: flicker 4s infinite;
+        }
+
+        #overlay-title.win {
+            color: var(--green);
+        }
+
+        #overlay-title.lose {
+            color: var(--red);
+        }
+
+        #overlay-sub {
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        #overlay-stats {
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            padding: 22px 42px;
+            text-align: center;
+            font-size: 0.87rem;
+            line-height: 2;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        #overlay-stats span {
+            color: var(--cyan);
+            font-weight: bold;
+        }
+
+        .orow {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .obtn {
+            background: transparent;
+            border: 1px solid;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            padding: 13px 32px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .obtn.p {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .obtn.s {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .obtn:hover {
+            filter: brightness(1.5);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        #legend {
+            position: fixed;
+            bottom: 18px;
+            left: 22px;
+            z-index: 50;
+            font-size: 0.68rem;
+            letter-spacing: 1px;
+            color: rgba(0, 243, 255, 0.5);
+            line-height: 1.8;
+        }
+
+        #legend span {
+            margin-right: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="index.html" id="back-btn">← Exit Terminal</a>
+
+    <div id="legend">
+        <span style="color:#00ff88">●</span> ENTRY &nbsp;
+        <span style="color:#00f3ff">●</span> NODE &nbsp;
+        <span style="color:#ff003c">●</span> FIREWALL &nbsp;
+        <span style="color:#bc13fe">●</span> CORE
+    </div>
+
+    <!-- BOOT -->
+    <div id="boot-screen">
+        <div id="boot-logo">CYBER INFILTRATION</div>
+        <div id="boot-terminal">
+            <div class="boot-line" id="bl1"><span class="prefix">></span><span class="text">Initializing infiltration
+                    protocol...</span><span class="s-ok">[ OK ]</span></div>
+            <div class="boot-line" id="bl2"><span class="prefix">></span><span class="text">Scanning network layers and
+                    topology...</span><span class="s-ok">[ OK ]</span></div>
+            <div class="boot-line" id="bl3"><span class="prefix">></span><span class="text">Identifying target node
+                    signatures...</span><span class="s-ok">[ OK ]</span></div>
+            <div class="boot-line" id="bl4"><span class="prefix">></span><span class="text">Probing firewall response
+                    pattern...</span><span class="s-warn">[WARN]</span></div>
+            <div class="boot-line" id="bl5"><span class="prefix">></span><span class="text">Injecting polymorphic bypass
+                    vectors...</span><span class="s-by">[BYPASS]</span></div>
+            <div class="boot-line" id="bl6"><span class="prefix">></span><span class="text">Quantum pathfinder
+                    synchronized...</span><span class="s-ok">[ OK ]</span></div>
+            <div class="boot-line" id="bl7"><span class="prefix">></span><span class="text">All systems nominal.
+                    Awaiting operator.</span><span class="s-ok">████ 100%</span></div>
+            <div class="boot-bar">
+                <div class="boot-bar-fill" id="boot-prog"></div>
+            </div>
+        </div>
+        <button id="start-btn" onclick="startGame()">▶ BEGIN INFILTRATION</button>
+    </div>
+
+    <!-- GAME -->
+    <div id="game-screen">
+        <div id="hud">
+            <div class="hud-block">
+                <div class="hud-label">Level</div>
+                <div class="hud-value" id="hud-level">01</div>
+            </div>
+            <div class="hud-block">
+                <div class="hud-label">Score</div>
+                <div class="hud-value" id="hud-score">0000</div>
+            </div>
+            <div class="hud-block">
+                <div class="hud-label">Time Left</div>
+                <div class="hud-value" id="timer-val">30</div>
+            </div>
+            <div class="hud-block">
+                <div class="hud-label">Nodes Hacked</div>
+                <div class="hud-value" id="hud-nodes">0/0</div>
+            </div>
+            <div class="hud-block">
+                <div class="hud-label">Lives</div>
+                <div class="hud-value" id="hud-lives">❤ ❤ ❤</div>
+            </div>
+        </div>
+        <div id="network-canvas"><canvas id="gameCanvas"></canvas></div>
+        <div id="log-bar">> AWAITING COMMAND...</div>
+    </div>
+
+    <!-- RESULT OVERLAY -->
+    <div id="overlay">
+        <div id="overlay-title">—</div>
+        <div id="overlay-sub">—</div>
+        <div id="overlay-stats"></div>
+        <div class="orow">
+            <button class="obtn p" id="overlay-action">Retry</button>
+            <button class="obtn s" onclick="location.href='index.html'">Exit</button>
+        </div>
+    </div>
+
+    <script>
+        // ── BOOT ────────────────────────────────────────────────
+        const BOOT = ['bl1', 'bl2', 'bl3', 'bl4', 'bl5', 'bl6', 'bl7'];
+        let bIdx = 0;
+        const bProg = document.getElementById('boot-prog');
+        function bootNext() {
+            if (bIdx >= BOOT.length) { document.getElementById('start-btn').classList.add('show'); return; }
+            document.getElementById(BOOT[bIdx]).classList.add('show');
+            bProg.style.width = ((bIdx + 1) / BOOT.length * 100) + '%';
+            bIdx++;
+            setTimeout(bootNext, 380 + Math.random() * 280);
+        }
+        setTimeout(bootNext, 500);
+
+        // ── ENGINE ───────────────────────────────────────────────
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let GS = { level: 1, score: 0, lives: 3, nodes: [], edges: [], path: [], timeLeft: 30, timer: null, raf: null, parts: [], phase: 'idle', tick: 0 };
+
+        const CFGS = [
+            { n: 8, fw: 1, t: 38, d: 3 },
+            { n: 11, fw: 2, t: 32, d: 4 },
+            { n: 14, fw: 3, t: 28, d: 4 },
+            { n: 18, fw: 4, t: 25, d: 5 },
+            { n: 22, fw: 5, t: 22, d: 5 },
+        ];
+        const cfg = () => CFGS[Math.min(GS.level - 1, CFGS.length - 1)];
+
+        // ── NETWORK ──────────────────────────────────────────────
+        function resize() {
+            const c = document.getElementById('network-canvas');
+            canvas.width = c.clientWidth;
+            canvas.height = c.clientHeight;
+        }
+
+        function buildNet() {
+            const { n: NC, fw: FW, d: LAYERS } = cfg();
+            const W = canvas.width, H = canvas.height, PAD = 70;
+            const nodes = [], edges = [];
+            const perLayer = Math.ceil((NC - 2) / (LAYERS - 1));
+
+            nodes.push({ id: 0, x: PAD, y: H / 2, type: 'entry', visited: false, active: false, pulse: Math.random() * Math.PI * 2 });
+
+            let id = 1;
+            for (let l = 1; l < LAYERS; l++) {
+                const cnt = (l === LAYERS - 1) ? 2 : perLayer;
+                const xp = PAD + (W - PAD * 2) * (l / LAYERS);
+                for (let k = 0; k < cnt && id < NC - 1; k++) {
+                    const yp = (H / (cnt + 1)) * (k + 1);
+                    nodes.push({ id, x: xp, y: yp, type: 'normal', visited: false, active: false, pulse: Math.random() * Math.PI * 2 });
+                    id++;
+                }
+            }
+            nodes.push({ id: nodes.length, x: W - PAD, y: H / 2, type: 'core', visited: false, active: false, pulse: Math.random() * Math.PI * 2 });
+
+            // Assign firewalls
+            const normals = nodes.filter(n => n.type === 'normal');
+            const picks = [...normals].sort(() => Math.random() - 0.5).slice(0, Math.min(FW, normals.length - 1));
+            picks.forEach(p => p.type = 'firewall');
+
+            // Build edges layer-to-layer
+            const groups = buildGroups(nodes, LAYERS, W, PAD);
+            for (let l = 0; l < groups.length - 1; l++) {
+                const A = groups[l], B = groups[l + 1];
+                A.forEach(a => {
+                    const picks2 = B.slice(0, Math.min(2, B.length));
+                    picks2.forEach(b => { if (!hasEdge(edges, a.id, b.id)) edges.push({ from: a.id, to: b.id, active: false, p: 0 }); });
+                });
+                // Extra cross connections
+                B.forEach(b => {
+                    if (Math.random() < 0.5 && A.length > 1) {
+                        const a = A[Math.floor(Math.random() * A.length)];
+                        if (!hasEdge(edges, a.id, b.id)) edges.push({ from: a.id, to: b.id, active: false, p: 0 });
+                    }
+                });
+            }
+            // Guarantee entry + core have edges
+            const core = nodes[nodes.length - 1];
+            if (!edges.some(e => e.from === 0 || e.to === 0)) {
+                const n2 = normals[0]; if (n2) edges.push({ from: 0, to: n2.id, active: false, p: 0 });
+            }
+            if (!edges.some(e => e.from === core.id || e.to === core.id)) {
+                const n2 = normals[normals.length - 1]; if (n2) edges.push({ from: n2.id, to: core.id, active: false, p: 0 });
+            }
+            return { nodes, edges };
+        }
+
+        function buildGroups(nodes, LAYERS, W, PAD) {
+            const groups = [[nodes[0]]];
+            const internals = nodes.slice(1, -1);
+            const step = (W - PAD * 2) / LAYERS;
+            for (let l = 1; l < LAYERS; l++) groups.push([]);
+            internals.forEach(n => {
+                const li = Math.max(1, Math.min(LAYERS - 1, Math.round((n.x - PAD) / step)));
+                if (!groups[li]) groups[li] = [];
+                groups[li].push(n);
+            });
+            groups.push([nodes[nodes.length - 1]]);
+            return groups.filter(g => g.length > 0);
+        }
+
+        const hasEdge = (edges, a, b) => edges.some(e => (e.from === a && e.to === b) || (e.from === b && e.to === a));
+        const nodeEdges = id => GS.edges.filter(e => e.from === id || e.to === id);
+        const neighbours = id => nodeEdges(id).map(e => e.from === id ? e.to : e.from);
+        const node = id => GS.nodes.find(n => n.id === id);
+
+        // ── DRAW ─────────────────────────────────────────────────
+        const NR = 26; // node radius
+
+        function drawAll() {
+            GS.tick++;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Ambient bg glow streaks
+            drawBgStreaks();
+
+            GS.edges.forEach(drawEdge);
+            GS.nodes.forEach(drawNode);
+            drawParts();
+        }
+
+        function drawBgStreaks() {
+            if (GS.tick % 4 !== 0) return;
+            // Tiny random particle occasionally
+            if (Math.random() < 0.3) {
+                GS.parts.push({
+                    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
+                    r: 1 + Math.random(), life: 80, maxLife: 80, color: 'rgba(0,243,255,0.15)', type: 'ambient'
+                });
+            }
+        }
+
+        function drawEdge(e) {
+            const A = node(e.from), B = node(e.to); if (!A || !B) return;
+            const active = e.active;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y);
+            if (active) {
+                ctx.strokeStyle = '#00f3ff';
+                ctx.lineWidth = 2.5;
+                ctx.shadowBlur = 12; ctx.shadowColor = '#00f3ff';
+                ctx.setLineDash([]);
+            } else {
+                ctx.strokeStyle = 'rgba(0,243,255,0.18)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5, 9]);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.restore();
+
+            // Moving dot on active edges
+            if (active) {
+                e.p = (e.p + 0.018) % 1;
+                const px = A.x + (B.x - A.x) * e.p, py = A.y + (B.y - A.y) * e.p;
+                ctx.save();
+                ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffffff';
+                ctx.shadowBlur = 16; ctx.shadowColor = '#00f3ff';
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // Idle edge: random dim spark
+            if (!active && Math.random() < 0.003) {
+                const t = Math.random();
+                GS.parts.push({ x: A.x + (B.x - A.x) * t, y: A.y + (B.y - A.y) * t, vx: (Math.random() - 0.5) * 1.5, vy: (Math.random() - 0.5) * 1.5, r: 2, life: 30, maxLife: 30, color: 'rgba(0,243,255,0.6)', type: 'spark' });
+            }
+        }
+
+        function drawNode(n) {
+            const { x, y, type, visited, active } = n;
+            const reachable = isReachable(n.id);
+            n.pulse = (n.pulse + 0.03) % (Math.PI * 2);
+            const t = GS.tick;
+
+            // Colors
+            let fill, border, glow, textCol;
+            switch (type) {
+                case 'entry': fill = '#001a0a'; border = '#00ff88'; glow = '#00ff88'; textCol = '#00ff88'; break;
+                case 'core': fill = '#1a0030'; border = '#bc13fe'; glow = '#bc13fe'; textCol = '#d060ff'; break;
+                case 'firewall': fill = '#1a000a'; border = '#ff003c'; glow = '#ff003c'; textCol = '#ff5060'; break;
+                default: fill = '#001018'; border = 'rgba(0,243,255,0.5)'; glow = '#00f3ff'; textCol = '#00f3ff';
+            }
+            if (visited && type !== 'firewall') { fill = '#002a18'; border = '#00ff88'; glow = '#00ff88'; }
+            if (visited && type === 'firewall') { fill = '#2a0010'; border = '#ff003c'; glow = '#ff003c'; }
+            if (active) { fill = '#002030'; border = '#ffffff'; glow = '#ffffff'; textCol = '#ffffff'; }
+
+            ctx.save();
+
+            // GLOW SHADOW
+            ctx.shadowBlur = active ? 40 : (reachable ? 22 : (visited ? 18 : 8));
+            ctx.shadowColor = glow;
+
+            // Fill circle
+            ctx.beginPath(); ctx.arc(x, y, NR, 0, Math.PI * 2);
+            ctx.fillStyle = fill; ctx.fill();
+
+            // Border
+            ctx.beginPath(); ctx.arc(x, y, NR, 0, Math.PI * 2);
+            ctx.strokeStyle = border;
+            ctx.lineWidth = active ? 3.5 : (visited ? 2.5 : 1.8);
+            ctx.stroke();
+
+            // Animated ring for reachable & special nodes
+            if (reachable && !visited) {
+                const ringR = NR + 7 + Math.sin(n.pulse) * 3;
+                ctx.shadowBlur = 0;
+                ctx.beginPath(); ctx.arc(x, y, ringR, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(0,243,255,0.4)';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([6, 6]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // Always-on idle ring animation for entry/core
+            if (type === 'entry' || type === 'core') {
+                const ringR2 = NR + 10 + Math.sin(n.pulse * 1.3) * 5;
+                ctx.shadowBlur = 0;
+                ctx.beginPath(); ctx.arc(x, y, ringR2, 0, Math.PI * 2);
+                ctx.strokeStyle = type === 'entry' ? 'rgba(0,255,136,0.2)' : 'rgba(188,19,254,0.2)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+
+            // Firewall: outer danger ring pulse
+            if (type === 'firewall') {
+                const fireR = NR + 8 + Math.sin(n.pulse * 2) * 4;
+                ctx.shadowBlur = 0;
+                ctx.beginPath(); ctx.arc(x, y, fireR, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(255,0,60,0.25)';
+                ctx.lineWidth = 1.2;
+                ctx.setLineDash([3, 5]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            ctx.restore();
+
+            // ── NODE LABEL ──  (clear, readable, bigger)
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Icon row (top)
+            let icon = type === 'entry' ? '▶' : type === 'core' ? '◈' : type === 'firewall' ? '⛔' : '◉';
+            ctx.font = `bold 13px 'Share Tech Mono', monospace`;
+            ctx.fillStyle = textCol;
+            ctx.shadowColor = glow; ctx.shadowBlur = 8;
+            ctx.fillText(icon, x, y - 7);
+
+            // Text row (bottom) — CLEAR and LEGIBLE
+            let lbl = type === 'entry' ? 'ENTRY' : type === 'core' ? 'CORE' : type === 'firewall' ? 'FW' : `N${String(n.id).padStart(2, '0')}`;
+            ctx.font = `bold 10px 'Share Tech Mono', monospace`;
+            ctx.shadowBlur = 6;
+            ctx.fillText(lbl, x, y + 8);
+
+            ctx.restore();
+        }
+
+        function isReachable(id) {
+            const path = GS.path;
+            if (path.length === 0) return id === 0;
+            const last = path[path.length - 1];
+            if (id === last) return false;
+            return neighbours(last).includes(id);
+        }
+
+        function drawParts() {
+            GS.parts = GS.parts.filter(p => p.life > 0);
+            GS.parts.forEach(p => {
+                ctx.save();
+                ctx.globalAlpha = p.life / p.maxLife;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 8; ctx.shadowColor = p.color;
+                ctx.fill();
+                p.x += p.vx; p.y += p.vy; p.r *= 0.94; p.life--;
+                ctx.restore();
+            });
+        }
+
+        function spawnBurst(x, y, color, n = 18) {
+            for (let i = 0; i < n; i++) {
+                const a = Math.random() * Math.PI * 2, sp = 1 + Math.random() * 5;
+                GS.parts.push({ x, y, color, r: 3 + Math.random() * 4, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 50 + Math.random() * 20, maxLife: 70 });
+            }
+        }
+
+        // ── INTERACTION ──────────────────────────────────────────
+        canvas.addEventListener('click', e => {
+            if (GS.phase !== 'playing') return;
+            const r = canvas.getBoundingClientRect();
+            const sx = canvas.width / r.width, sy = canvas.height / r.height;
+            const cx = (e.clientX - r.left) * sx, cy = (e.clientY - r.top) * sy;
+            const hit = GS.nodes.find(n => Math.hypot(n.x - cx, n.y - cy) < NR + 8);
+            if (hit) clickNode(hit);
+        });
+
+        function clickNode(n) {
+            const path = GS.path;
+            const pIdx = path.indexOf(n.id);
+
+            // Click already-in-path node: backtrack
+            if (pIdx !== -1 && pIdx !== path.length - 1) {
+                for (let i = pIdx; i < path.length - 1; i++) setEdgeActive(path[i], path[i + 1], false);
+                for (let i = pIdx + 1; i < path.length; i++) { const nd = node(path[i]); if (nd) { nd.visited = false; nd.active = false; } }
+                GS.path = path.slice(0, pIdx + 1);
+                const cur = node(n.id); if (cur) cur.active = true;
+                log(`> BACKTRACK — rerouting from ${n.type.toUpperCase()}...`);
+                updateHUD(); return;
+            }
+
+            if (!isReachable(n.id)) { log('> ⚠ NODE unreachable from current position.'); return; }
+
+            // Firewall!
+            if (n.type === 'firewall') {
+                spawnBurst(n.x, n.y, '#ff003c', 28);
+                n.active = true; setTimeout(() => n.active = false, 600);
+                GS.lives--;
+                log('> 🔴 FIREWALL TRIGGERED — INTRUSION ALERT! Security trace initiated!');
+                updateHUD();
+                if (GS.lives <= 0) setTimeout(doLose, 800);
+                return;
+            }
+
+            // Move previous node to visited
+            if (path.length > 0) {
+                const prev = node(path[path.length - 1]);
+                if (prev) { prev.active = false; prev.visited = true; }
+                setEdgeActive(path[path.length - 1], n.id, true);
+            }
+
+            n.visited = true; n.active = true;
+            path.push(n.id);
+            spawnBurst(n.x, n.y, '#00f3ff', 14);
+            updateHUD();
+
+            if (n.type === 'entry') log('> ▶ ENTRY POINT compromised. Navigate to CORE SERVER.');
+            else if (n.type === 'core') { log('> ✅ CORE SERVER REACHED! Extracting payload...'); setTimeout(doWin, 700); }
+            else {
+                const msgs = ['> Node bypassed. Path extended...', '> Access granted. Moving deeper...', '> Bypass successful. Continuing route...', '> Node infiltrated! Signal clear...'];
+                log(msgs[Math.floor(Math.random() * msgs.length)]);
+            }
+        }
+
+        function setEdgeActive(a, b, v) {
+            const e = GS.edges.find(e => (e.from === a && e.to === b) || (e.from === b && e.to === a));
+            if (e) e.active = v;
+        }
+
+        // ── WIN / LOSE ────────────────────────────────────────────
+        function doWin() {
+            GS.phase = 'win'; clearInterval(GS.timer);
+            const bonus = GS.timeLeft * 60, pBonus = GS.path.length * 120, total = bonus + pBonus + GS.level * 600;
+            GS.score += total;
+            showOverlay('win', 'ACCESS GRANTED', '✦  INFILTRATION SUCCESSFUL  ✦',
+                `Level Cleared: <span>0${GS.level}</span><br>Path: <span>${GS.path.length} nodes</span><br>Time Bonus: <span>+${bonus}</span><br>Node Bonus: <span>+${pBonus}</span><br>Total Score: <span>${GS.score}</span>`,
+                GS.level < 5 ? 'Next Level ▶' : 'Play Again',
+                () => { GS.level < 5 ? GS.level++ : (GS.level = 1, GS.score = 0, GS.lives = 3); loadLevel(); }
+            );
+        }
+
+        function doLose() {
+            GS.phase = 'lose'; clearInterval(GS.timer);
+            showOverlay('lose', 'SYSTEM LOCKED', '⚠  INTRUSION DETECTED — TRACE COMPLETE',
+                `Level: <span>0${GS.level}</span><br>Score: <span>${GS.score}</span><br>Lives Left: <span>${Math.max(0, GS.lives)}</span><br><br><span style="color:#ff003c">IDENTITY EXPOSED</span>`,
+                'Retry Level',
+                () => { GS.lives = 3; GS.score = 0; loadLevel(); }
+            );
+        }
+
+        function showOverlay(cls, title, sub, stats, btnTxt, action) {
+            const o = document.getElementById('overlay');
+            document.getElementById('overlay-title').className = cls;
+            document.getElementById('overlay-title').textContent = title;
+            document.getElementById('overlay-sub').textContent = sub;
+            document.getElementById('overlay-stats').innerHTML = stats;
+            const btn = document.getElementById('overlay-action');
+            btn.textContent = btnTxt;
+            btn.onclick = () => { action(); o.classList.remove('show'); };
+            o.classList.add('show');
+        }
+
+        // ── TIMER ─────────────────────────────────────────────────
+        function startTimer() {
+            GS.timeLeft = cfg().t;
+            const tv = document.getElementById('timer-val');
+            clearInterval(GS.timer);
+            GS.timer = setInterval(() => {
+                GS.timeLeft--;
+                tv.textContent = GS.timeLeft;
+                tv.className = GS.timeLeft <= 8 ? 'danger' : '';
+                if (GS.timeLeft <= 0) { clearInterval(GS.timer); log('> ⏱ TIME EXPIRED — Connection traced!'); doLose(); }
+            }, 1000);
+        }
+
+        // ── HUD ───────────────────────────────────────────────────
+        function updateHUD() {
+            const total = GS.nodes.filter(n => n.type === 'normal' || n.type === 'core').length;
+            const done = GS.path.filter(id => { const n = node(id); return n && (n.type === 'normal' || n.type === 'core'); }).length;
+            document.getElementById('hud-level').textContent = `0${GS.level}`;
+            document.getElementById('hud-score').textContent = String(GS.score).padStart(4, '0');
+            document.getElementById('hud-nodes').textContent = `${done}/${total}`;
+            const lv = ['❤ ❤ ❤', '❤ ❤ ♡', '❤ ♡ ♡', '♡ ♡ ♡'][Math.max(0, 3 - GS.lives)];
+            document.getElementById('hud-lives').textContent = lv;
+        }
+
+        function log(msg) { document.getElementById('log-bar').textContent = msg; }
+
+        // ── LOAD ──────────────────────────────────────────────────
+        function loadLevel() {
+            cancelAnimationFrame(GS.raf); clearInterval(GS.timer);
+            resize();
+            const net = buildNet();
+            GS.nodes = net.nodes; GS.edges = net.edges;
+            GS.path = []; GS.parts = []; GS.phase = 'playing'; GS.tick = 0;
+            updateHUD();
+            log(`> LEVEL 0${GS.level} — Navigate ENTRY → CORE. Avoid FIREWALLS!`);
+            startTimer();
+            const loop = () => { drawAll(); GS.raf = requestAnimationFrame(loop); };
+            GS.raf = requestAnimationFrame(loop);
+        }
+
+        function startGame() {
+            document.getElementById('boot-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'flex';
+            GS = { level: 1, score: 0, lives: 3, nodes: [], edges: [], path: [], timeLeft: 30, timer: null, raf: null, parts: [], phase: 'idle', tick: 0 };
+            loadLevel();
+        }
+
+        window.addEventListener('resize', () => { if (GS.phase === 'playing') { const net = buildNet(); GS.nodes = net.nodes; GS.edges = net.edges; GS.path = []; } });
+    </script>
+</body>
+
+</html>

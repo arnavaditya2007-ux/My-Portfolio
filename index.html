@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arnav Aditya | Interactive Portfolio</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <!-- WebGL Shader Background (glowing sine wave) -->
+    <canvas id="shader-canvas"
+        style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-5; pointer-events:none; display:block;"></canvas>
+
+    <!-- Background Layer (Plexus/Particles) -->
+    <canvas id="bg-canvas" class="content-hidden"
+        style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-3; pointer-events:none;"></canvas>
+
+    <!-- Preloader -->
+    <div id="preloader"></div>
+
+    <!-- Navigation -->
+    <nav class="content-hidden">
+        <div class="logo">ARNAV<span class="dot-dev">.DEV</span></div>
+        <ul class="nav-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="menu-toggle">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+
+    <!-- Master Card System -->
+    <div id="master-card-container" class="content-hidden">
+        <!-- The PIVOT handles slot-based positioning (2D left/top).
+             Everything inside stays perfectly aligned. -->
+        <div id="master-card-pivot">
+            <!-- THE UNIFIED CARD: Handles both visuals and 3D rotation -->
+            <div id="master-card" class="holo-card">
+
+                <!-- Front Face -->
+                <div class="card-face card-front">
+                    <div class="card-content">
+                        <div class="avatar-wrapper">
+                            <img src="assets/images/profile.jpg" alt="Arnav Aditya" class="avatar-img">
+                        </div>
+                        <div class="card-header">
+                            <h2>Arnav Aditya</h2>
+                            <span class="role">Lvl 18 Developer</span>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <span>Level</span>
+                                <strong>18</strong>
+                            </div>
+                            <div class="stat-box">
+                                <span>Class</span>
+                                <strong>CSE</strong>
+                            </div>
+                            <div class="stat-box">
+                                <span>University</span>
+                                <strong>CU</strong>
+                            </div>
+                            <div class="stat-box">
+                                <span>Status</span>
+                                <strong>Learning</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Back Face -->
+                <div class="card-face card-back">
+                    <div class="card-content curiosity-zone">
+                        <i class="fas fa-fingerprint curiosity-icon"></i>
+                        <h2 class="curiosity-text">Just Curious</h2>
+                        <div class="curiosity-bar"></div>
+                        <p class="curiosity-sub">Link established. System waiting.</p>
+                    </div>
+                </div>
+            </div> <!-- end #master-card -->
+        </div> <!-- end #master-card-pivot -->
+    </div> <!-- end #master-card-container -->
+
+    <!-- Main Content -->
+    <main id="content-sections">
+        <!-- Hero Section -->
+        <section id="hero" class="panel">
+            <div class="container">
+                <div class="hero-text">
+                    <div class="typing-container">
+                        <h3 id="hero-status" class="loader-status"></h3>
+                        <h1 id="hero-name" class="glitch"></h1>
+                        <!-- Separate bar for intro -->
+                        <div id="intro-bar" class="loader-bar-container">
+                            <div class="loader-bar"></div>
+                        </div>
+                    </div>
+                    <div class="hero-details content-hidden">
+                        <p class="reveal-text">B.E. Computer Science Engineering Student at Chandigarh University. Solo
+                            Developer specializing in Web, App, and Game Development.</p>
+                        <div class="button-group reveal-text">
+                            <a href="#projects" class="btn primary-btn">View Projects</a>
+                            <a href="#contact" class="btn secondary-btn">Connect</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- About Section -->
+        <section id="about" class="panel content-right">
+            <div class="container">
+                <div class="glass-panel about-content">
+                    <h2 class="section-title">Identity <span class="highlight">Profile</span></h2>
+                    <div class="about-grid-inner">
+                        <div class="about-text">
+                            <p>Currently pursuing my <strong>B.E. Computer Science Engineering</strong> at
+                                <strong>Chandigarh University</strong>. I am laying a strong foundation in algorithms,
+                                data structures, and software principles.
+                            </p>
+                            <p>I am a solo developer, actively engaged in Web, App, and Game Development. Recently, I've
+                                immersed myself in game development using <strong>Unreal Engine</strong> and
+                                <strong>Unity</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shuffle Highlight Cards Section -->
+        <section id="highlights" class="panel section-shield">
+            <div class="container">
+                <div class="glass-panel about-content">
+                    <h2 class="section-title">Key <span class="highlight">Highlights</span></h2>
+                    <p style="color:rgba(255,255,255,0.55); font-size:0.9rem; letter-spacing:1px; margin-bottom: 40px;">
+                        Drag or click the card to shuffle through my focus areas.
+                    </p>
+                    <!-- Card Stack Container -->
+                    <div class="shuffle-deck-wrapper">
+                        <div class="shuffle-deck" id="shuffleDeck">
+
+                            <div class="sh-card" data-idx="0">
+                                <div class="sh-card-icon"><i class="fas fa-mobile-alt"></i></div>
+                                <div class="sh-card-tag">App Development</div>
+                                <h3 class="sh-card-title">Active Deployments</h3>
+                                <p class="sh-card-body">Built and deployed two production Android apps — <strong>Campus
+                                        IQ</strong> and <strong>Epica</strong> — available on the Google Play Store.
+                                    Both are live and actively maintained, demonstrating end-to-end mobile development
+                                    skills from design to deployment.</p>
+
+                            </div>
+
+                            <div class="sh-card" data-idx="1">
+                                <div class="sh-card-icon"><i class="fas fa-gamepad"></i></div>
+                                <div class="sh-card-tag">Game Architecture</div>
+                                <h3 class="sh-card-title">World Builder</h3>
+                                <p class="sh-card-body">Engineering immersive worlds with <strong>Unreal Engine
+                                        5</strong> and <strong>Unity</strong>. Focused on systemic gameplay mechanics,
+                                    shader programming, 3D rendering, and physics systems — pushing creative and
+                                    technical boundaries simultaneously.</p>
+
+                            </div>
+
+                            <div class="sh-card" data-idx="2">
+                                <div class="sh-card-icon"><i class="fas fa-robot"></i></div>
+                                <div class="sh-card-tag">Intelligence Systems</div>
+                                <h3 class="sh-card-title">AI Integration</h3>
+                                <p class="sh-card-body">Exploring neural networks and LLM-powered features for next-gen
+                                    applications. Experimenting with <strong>OpenAI APIs</strong> and open-source models
+                                    to build more adaptive, intelligent user experiences and data-driven pipelines.</p>
+
+                            </div>
+
+                            <div class="sh-card" data-idx="3">
+                                <div class="sh-card-icon"><i class="fab fa-youtube"></i></div>
+                                <div class="sh-card-tag">Content Creation</div>
+                                <h3 class="sh-card-title">Visual Storyteller</h3>
+                                <p class="sh-card-body">Between 2022 and 2023, I managed two YouTube channels
+                                    (<strong>𝕸𝖔𝖒𝖔.𝖎𝖘.𝖑𝖎𝖛𝖊</strong> and
+                                    <strong>𝕴𝖓𝖛𝖎𝖓𝖈𝖎𝖇𝖑𝖊.𝖒𝖔𝖒𝖔</strong>) focused on gaming and Marvel edits.
+                                    Gained hands-on experience in video production, digital engagement, and creative
+                                    media workflows.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <!-- Shuffle Button -->
+                        <button class="sh-shuffle-btn" id="shuffleBtn" onclick="shuffleCards()">
+                            <i class="fas fa-random"></i> Shuffle
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="panel section-shield" style="padding-top: 50px; padding-bottom: 50px;">
+            <div class="container skills-network-container">
+                <div class="skills-content">
+                    <h2 class="section-title" id="skills-title">Technical <span class="highlight">Arsenal</span></h2>
+                    <div id="skills-network">
+                        <!-- SVG for network lines -->
+                        <svg id="network-svg"></svg>
+
+                        <!-- Skill Nodes -->
+                        <div class="skill-node" id="node-data"
+                            data-links="node-ml,node-ai,node-sql,node-app,node-html,node-iot"><i
+                                class="fas fa-chart-line"></i><span>Data Analysis</span></div>
+
+                        <!-- AI Group (Left) -->
+                        <div class="skill-node" id="node-ml" data-links="node-ai,node-data"><i
+                                class="fas fa-brain"></i><span>Machine Learning</span></div>
+                        <div class="skill-node" id="node-ai" data-links="node-ml,node-data"><i
+                                class="fas fa-robot"></i><span>AI Development</span></div>
+                        <div class="skill-node" id="node-sql" data-links="node-data"><i
+                                class="fas fa-database"></i><span>SQL</span></div>
+
+                        <!-- App/Game Group (Right) -->
+                        <div class="skill-node" id="node-app"
+                            data-links="node-unity,node-unreal,node-data,node-android"><i
+                                class="fas fa-mobile-alt"></i><span>App Dev</span></div>
+                        <div class="skill-node" id="node-unity" data-links="node-app,node-unreal"><i
+                                class="fab fa-unity"></i><span>Unity</span></div>
+                        <div class="skill-node" id="node-unreal" data-links="node-app,node-unity"><i
+                                class="fas fa-cube"></i><span>Unreal Engine</span></div>
+                        <div class="skill-node" id="node-android" data-links="node-app"><i
+                                class="fab fa-android"></i><span>Android Studio</span></div>
+
+                        <!-- Web Group (Top) -->
+                        <div class="skill-node" id="node-html" data-links="node-git,node-cloud,node-data"><i
+                                class="fab fa-html5"></i><span>HTML5</span></div>
+                        <div class="skill-node" id="node-cloud" data-links="node-html,node-git"><i
+                                class="fas fa-cloud"></i><span>Cloud Platforms</span></div>
+                        <div class="skill-node" id="node-git" data-links="node-html,node-cloud"><i
+                                class="fab fa-git-alt"></i><span>Git/GitHub</span></div>
+
+                        <!-- Hardware/IoT Group (Bottom) -->
+                        <div class="skill-node" id="node-iot" data-links="node-data,node-arduino"><i
+                                class="fas fa-microchip"></i><span>Internet of Things</span></div>
+                        <div class="skill-node" id="node-arduino" data-links="node-iot"><i
+                                class="fas fa-terminal"></i><span>Arduino</span></div>
+
+                        <!-- Skill Detail Overlay (Moved inside network for perfect alignment) -->
+                        <div id="skill-detail-overlay" class="skill-detail-hidden">
+                            <div class="skill-detail-content">
+                                <div class="skill-detail-line"></div>
+                                <div class="skill-detail-text">
+                                    <h3 id="skill-detail-title"></h3>
+                                    <p id="skill-detail-body"></p>
+                                    <button id="skill-detail-close">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section / App Marketing -->
+        <section id="projects" class="panel section-shield">
+            <div class="container container-marketing"
+                style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px; width: 100%;">
+                <!-- Text Content -->
+                <div class="glass-panel text-block marketing-content"
+                    style="flex: 1; min-width: 300px; max-width: 600px;">
+                    <h2 class="section-title">My Apps Used <span class="highlight">Worldwide</span></h2>
+                    <p style="margin-bottom: 20px;">
+                        I have published two mobile apps on Google Play that are being used by people across multiple
+                        countries.
+                        The interactive globe shows where users are located globally.
+                    </p>
+
+                    <div class="deployment-links" style="margin-top: 25px;">
+                        <a href="https://play.google.com/store/apps/details?id=com.techosis.epica" target="_blank"
+                            class="play-store-btn"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff;">
+                            <i class="fab fa-google-play"></i> Epica
+                        </a>
+                        <a href="https://play.google.com/store/apps/details?id=com.techosis.campusiq" target="_blank"
+                            class="play-store-btn"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff;">
+                            <i class="fab fa-google-play"></i> Campus IQ
+                        </a>
+                    </div>
+
+                    <div class="stats-grid"
+                        style="margin-top: 35px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        <div class="stat-box"
+                            style="text-align: center; border: 1px solid rgba(0, 255, 255, 0.2); background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px;">
+                            <i class="fas fa-download"
+                                style="color: var(--cyan); margin-bottom: 8px; font-size: 1.5rem; display: block;"></i>
+                            <span
+                                style="font-size: 0.8rem; color: rgba(255,255,255,0.6); text-transform: uppercase;">Apps
+                                Published</span>
+                            <strong style="font-size: 1.5rem; color: #fff; display: block; margin-top: 5px;">2</strong>
+                        </div>
+                        <div class="stat-box"
+                            style="text-align: center; border: 1px solid rgba(0, 255, 255, 0.2); background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px;">
+                            <i class="fas fa-users"
+                                style="color: var(--cyan); margin-bottom: 8px; font-size: 1.5rem; display: block;"></i>
+                            <span
+                                style="font-size: 0.8rem; color: rgba(255,255,255,0.6); text-transform: uppercase;">Global
+                                Downloads</span>
+                            <strong style="font-size: 1.5rem; color: #fff; display: block; margin-top: 5px;">44</strong>
+                        </div>
+                        <div class="stat-box"
+                            style="text-align: center; border: 1px solid rgba(0, 255, 255, 0.2); background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px;">
+                            <i class="fas fa-globe"
+                                style="color: var(--cyan); margin-bottom: 8px; font-size: 1.5rem; display: block;"></i>
+                            <span
+                                style="font-size: 0.8rem; color: rgba(255,255,255,0.6); text-transform: uppercase;">Worldwide
+                                Reach</span>
+                            <strong style="font-size: 1.5rem; color: #fff; display: block; margin-top: 5px;">190
+                                Countries</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Globe Container -->
+                <div class="globe-container"
+                    style="flex: 1; min-width: 300px; display: flex; justify-content: center; align-items: center; position: relative; pointer-events: auto;">
+                    <div id="globeViz"
+                        style="width: 100%; height: 500px; cursor: grab; position: relative; z-index: 10;"></div>
+                    <!-- Glow behind globe -->
+                    <div
+                        style="position: absolute; top: 50%; left: 50%; width: 300px; height: 300px; transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(0, 243, 255, 0.15) 0%, rgba(0,0,0,0) 70%); filter: blur(40px); z-index: 1; pointer-events: none;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Dev Detailed -->
+        <section id="game-dev" class="panel">
+            <div class="container ">
+                <div class="glass-panel text-block">
+                    <h2 class="section-title">Game <span class="highlight">Architecture</span></h2>
+                    <p>Building worlds with Unreal Engine 5 and Unity. I am deeply interested in systemic gameplay
+                        mechanics, shader programming, and crafting immersive environments. As a first-year student, I
+                        am in a constant learning phase—making mistakes, learning from them, and constantly improving my
+                        technical stack. I love the challenge of translating complex game design ideas into functional,
+                        high-performance code, and I'm currently focused on exploring advanced 3D rendering and physics
+                        systems.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Dev Detailed -->
+        <section id="ai-dev" class="panel content-right">
+            <div class="container ">
+                <div class="glass-panel text-block">
+                    <h2 class="section-title">Intelligence <span class="highlight">Systems</span></h2>
+                    <p>Exploring the frontier of AI by implementing neural networks and LLM-powered features for
+                        next-gen applications. I enjoy experimenting with new AI frameworks and integration strategies.
+                        Although I'm not yet a master of these technologies, my passion for logic and problem-solving
+                        drives me to dive deep into data analysis and machine learning. I'm actively working on projects
+                        that leverage OpenAI's APIs and open-source models to create more adaptive and intelligent user
+                        experiences.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Creation Section -->
+        <section id="content-creation" class="panel">
+            <div class="container ">
+                <div class="glass-panel text-block">
+                    <h2 class="section-title">Creative <span class="highlight">Production</span></h2>
+                    <p>Between 2022 and 2023, I created and managed two YouTube channels where I produced content
+                        focused on gaming and Marvel-related edits. This involved planning video ideas, editing clips,
+                        and publishing engaging content for entertainment audiences. Through this experience, I gained
+                        practical skills in video editing, content creation, and understanding how digital platforms
+                        like YouTube work. These channels represent my early hands-on experience in creative media
+                        production and online content development.</p>
+
+                    <div class="deployment-links" style="margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
+                        <a href="https://www.youtube.com/@Arnav488" target="_blank" class="play-store-btn">
+                            <i class="fab fa-youtube"></i> 𝕸𝖔𝖒𝖔.𝖎𝖘.𝖑𝖎𝖛𝖊
+                        </a>
+                        <a href="https://www.youtube.com/@ArnavVG" target="_blank" class="play-store-btn">
+                            <i class="fab fa-youtube"></i> 𝕴𝖓𝖛𝖎𝖓𝖈𝖎𝖇𝖑𝖊.𝖒𝖔𝖒𝖔
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Digital Collaborations / Special Thanks -->
+        <section id="dev-intel" class="panel content-right">
+            <div class="container">
+                <div class="glass-panel text-block">
+                    <h2 class="section-title">Digital <span class="highlight">Synergy</span></h2>
+                    <p>While the vision, logic, and dreams behind these projects are entirely my own, I am incredibly
+                        grateful to the ecosystems provided by global pioneers. I view these technologies not just as
+                        tools, but as my <strong>Partners in Creation</strong>.
+                    </p>
+
+                    <div class="collaborator-grid">
+                        <a href="https://openai.com" target="_blank" class="collab-item">
+                            <i class="fas fa-brain"></i>
+                            <span>OPENAI</span>
+                        </a>
+                        <a href="https://about.google" target="_blank" class="collab-item">
+                            <i class="fab fa-google"></i>
+                            <span>GOOGLE</span>
+                        </a>
+                        <a href="https://anthropic.com" target="_blank" class="collab-item">
+                            <i class="fas fa-feather-alt"></i>
+                            <span>ANTHROPIC</span>
+                        </a>
+                        <a href="https://antigravity.google/" target="_blank" class="collab-item">
+                            <i class="fas fa-bolt"></i>
+                            <span>ANTIGRAVITY</span>
+                        </a>
+                    </div>
+
+                    <p style="margin-top: 30px;">
+                        While I maintain total creative control, I’ve established a powerful workflow alongside AI
+                        pioneers. Platforms like <strong>ChatGPT</strong>, <strong>Claude</strong>, and
+                        <strong>Google</strong> act as my digital co-pilots, helping me navigate technical hurdles and
+                        refine my ideas.
+                    </p>
+                    <p style="margin-top: 15px;">
+                        Emerging engines like <strong>Anti-gravity</strong> and <strong>TRAE</strong> have been
+                        instrumental in bridging the gap between imagination and reality, empowering me to push the
+                        boundaries of what a solo developer can achieve. I am deeply thankful to the teams behind these
+                        marvels for building the powerful foundations that allow me to focus on what matters most:
+                        <strong>Innovation and Experience.</strong>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Certificate / Credentials Section -->
+        <section id="certificates" class="panel">
+            <div class="cert-bg-watermark">CREDENTIALS</div>
+            <div class="container">
+                <div class="glass-panel text-block">
+                    <h2 class="section-title">Verified <span class="highlight">Credentials</span></h2>
+                    <p style="margin-bottom: 40px;">Official certifications and recognitions earned through active
+                        participation in competitive tech events and hackathons.</p>
+
+                    <div class="cert-grid">
+                        <!-- Certificate Card 1 -->
+                        <div class="cert-card" onclick="openCertLightbox(this)">
+                            <!-- Overlapping Large Title -->
+                            <div class="cert-title-overlap">AI FUSION</div>
+
+                            <!-- Technical Annotations (Corners) -->
+                            <div class="cert-anno anno-top-left">AUTH_CODE: ADV-26-AF</div>
+                            <div class="cert-anno anno-top-right">
+                                <i class="fas fa-shield-halved"></i> VERIFIED CREDENTIAL
+                            </div>
+                            <div class="cert-anno anno-bottom-left">
+                                ISSUED: FEB 2026 <br>
+                                BY: ADVITIYA TECH FEST
+                            </div>
+
+                            <div class="cert-image-wrapper">
+                                <img src="assets/images/cert-ai-fusion.jpg" alt="Advitiya'26 AI Fusion Certificate"
+                                    class="cert-image" loading="lazy">
+
+                                <!-- Minimal CTA Button (Bottom Right) -->
+                                <button class="cert-cta-minimal">
+                                    <span>EXPLORE</span>
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+
+                            <!-- Hover Reflection Layer -->
+                            <div class="cert-glare"></div>
+                        </div>
+
+                        <!-- Certificate Card 2 -->
+                        <div class="cert-card" onclick="openCertLightbox(this)">
+                            <!-- Overlapping Large Title -->
+                            <div class="cert-title-overlap">AI FEST</div>
+
+                            <!-- Technical Annotations (Corners) -->
+                            <div class="cert-anno anno-top-left">AUTH_CODE: AIF-26-AA</div>
+                            <div class="cert-anno anno-top-right">
+                                <i class="fas fa-shield-halved"></i> VERIFIED CREDENTIAL
+                            </div>
+                            <div class="cert-anno anno-bottom-left">
+                                ISSUED: 2026 <br>
+                                BY: AI FEST COMMITTEE
+                            </div>
+
+                            <div class="cert-image-wrapper">
+                                <img src="assets/images/cert-ai-fest.png" alt="AI Fest 2026 Certificate"
+                                    class="cert-image" loading="lazy">
+
+                                <!-- Minimal CTA Button (Bottom Right) -->
+                                <button class="cert-cta-minimal">
+                                    <span>EXPLORE</span>
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+
+                            <!-- Hover Reflection Layer -->
+                            <div class="cert-glare"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Certificate Lightbox Modal -->
+        <div id="cert-lightbox" class="cert-lightbox-overlay" onclick="closeCertLightbox(event)">
+            <div class="cert-lightbox-content">
+                <button class="cert-lightbox-close" onclick="closeCertLightbox(event)">&times;</button>
+                <img id="cert-lightbox-img" src="" alt="Certificate Full View">
+                <div class="cert-lightbox-caption" id="cert-lightbox-caption"></div>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <section id="contact" class="panel">
+            <div class="container" style="justify-content: center;">
+                <div class="contact-card glass-panel">
+                    <h2 class="section-title">Establish <span class="highlight">Link</span></h2>
+                    <form id="contact-form">
+                        <div class="input-group">
+                            <input type="text" id="name" required>
+                            <label for="name">Identifier (Name)</label>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" id="email" required>
+                            <label for="email">Channel (Email)</label>
+                        </div>
+                        <div class="input-group">
+                            <textarea id="message" required></textarea>
+                            <label for="message">Transmission (Message)</label>
+                        </div>
+                        <button type="submit" class="btn primary-btn g-btn">Execute Send</button>
+                    </form>
+                    <div class="connection-terminal">
+                        <h3 class="terminal-label">Linkage: <span class="highlight">Neural Synchrony</span></h3>
+                        <div class="connection-grid">
+                            <a href="https://github.com/arnavaditya2007-ux" target="_blank" class="connection-item">
+                                <i class="fab fa-github"></i>
+                                <span class="link-name">GitHub</span>
+                            </a>
+                            <a href="https://x.com/ArnavAditya3084" target="_blank" class="connection-item">
+                                <i class="fa-brands fa-x-twitter"></i>
+                                <span class="link-name">Twitter</span>
+                            </a>
+                            <a href="https://www.instagram.com/uro.arnav" target="_blank" class="connection-item">
+                                <i class="fa-brands fa-instagram"></i>
+                                <span class="link-name">Instagram</span>
+                            </a>
+                            <a href="https://www.threads.com/@uro.arnav" target="_blank" class="connection-item">
+                                <i class="fa-brands fa-threads"></i>
+                                <span class="link-name">Threads</span>
+                            </a>
+                            <a href="http://discord.com/arnav7301" target="_blank" class="connection-item">
+                                <i class="fa-brands fa-discord"></i>
+                                <span class="link-name">Discord</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Thank You Section -->
+        <section id="thank-you" class="panel">
+            <div class="container">
+                <div class="reveal-text">
+                    <h1 class="thank-you-title">Protocol <span class="highlight">Complete</span></h1>
+                    <p class="thank-you-text">Thank you for exploring this digital space. System logging off...</p>
+                    <div class="footer-note">Built with Passion by Arnav Aditya</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feedback Section -->
+        <section id="feedback-section" class="panel">
+            <div class="container">
+                <div class="feedback-container reveal-text">
+                    <p class="feedback-question">Enjoyed the experience?</p>
+                    <div class="feedback-buttons">
+                        <button class="btn primary-btn feedback-btn" id="yes-btn">Affirmative</button>
+                        <button class="btn secondary-btn feedback-btn" id="no-btn">Negative</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating Game Launch Button -->
+    <a href="cyber-infiltration.html" id="game-launch-btn" class="content-hidden">
+        <span class="game-btn-icon">⬡</span>
+        <span class="game-btn-text">Start Infiltration</span>
+    </a>
+
+    <div id="feedback-toast">Thank you for your feedback!</div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+    <!-- Three.js for WebGL Shader -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Globe.gl for Interactive Map -->
+    <script src="https://unpkg.com/globe.gl"></script>
+
+    <!-- WebGL Shader: Glowing Sine Wave (translated from React component) -->
+    <script>
+        (function () {
+            var canvas = document.getElementById('shader-canvas');
+            if (!canvas || typeof THREE === 'undefined') return;
+
+            var scene = new THREE.Scene();
+            var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(new THREE.Color(0x020205));
+
+            var camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, -1);
+
+            var uniforms = {
+                resolution: { value: [window.innerWidth, window.innerHeight] },
+                time: { value: 0.0 },
+                xScale: { value: 1.0 },
+                yScale: { value: 0.5 },
+                distortion: { value: 0.050 }
+            };
+
+            var vertexShader = [
+                'attribute vec3 position;',
+                'void main() {',
+                '  gl_Position = vec4(position, 1.0);',
+                '}'
+            ].join('\n');
+
+            var fragmentShader = [
+                'precision highp float;',
+                'uniform vec2 resolution;',
+                'uniform float time;',
+                'uniform float xScale;',
+                'uniform float yScale;',
+                'uniform float distortion;',
+                '',
+                'void main() {',
+                '  vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);',
+                '  float d = length(p) * distortion;',
+                '  float rx = p.x * (1.0 + d);',
+                '  float gx = p.x;',
+                '  float bx = p.x * (1.0 - d);',
+                '  float r = 0.05 / abs(p.y + sin((rx + time) * xScale) * yScale);',
+                '  float g = 0.05 / abs(p.y + sin((gx + time) * xScale) * yScale);',
+                '  float b = 0.05 / abs(p.y + sin((bx + time) * xScale) * yScale);',
+                '  gl_FragColor = vec4(r * 0.0, g * 0.95, b * 1.0, 1.0);',
+                '}'
+            ].join('\n');
+
+            var positions = new Float32Array([
+                -1, -1, 0, 1, -1, 0, -1, 1, 0,
+                1, -1, 0, -1, 1, 0, 1, 1, 0
+            ]);
+            var geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            var material = new THREE.RawShaderMaterial({
+                vertexShader: vertexShader,
+                fragmentShader: fragmentShader,
+                uniforms: uniforms,
+                side: THREE.DoubleSide
+            });
+
+            var mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            function handleResize() {
+                var w = window.innerWidth;
+                var h = window.innerHeight;
+                renderer.setSize(w, h, false);
+                uniforms.resolution.value = [w, h];
+            }
+            handleResize();
+            window.addEventListener('resize', handleResize);
+
+            function animate() {
+                uniforms.time.value += 0.01;
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+    </script>
+
+    <!-- Globe Initialization -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const globeContainer = document.getElementById('globeViz');
+            if (!globeContainer) return;
+
+            const markers = [
+                { lat: 37.7595, lng: -122.4367, size: 0.1, name: 'San Francisco' },
+                { lat: 40.7128, lng: -74.0060, size: 0.1, name: 'New York' },
+                { lat: 51.5074, lng: -0.1278, size: 0.1, name: 'London' },
+                { lat: 28.6139, lng: 77.2090, size: 0.1, name: 'New Delhi' },
+                { lat: 19.0760, lng: 72.8777, size: 0.1, name: 'Mumbai' },
+                { lat: 52.5200, lng: 13.4050, size: 0.1, name: 'Berlin' },
+                { lat: -23.5505, lng: -46.6333, size: 0.1, name: 'Sao Paulo' },
+                { lat: 35.6762, lng: 139.6503, size: 0.1, name: 'Tokyo' },
+                { lat: 43.6510, lng: -79.3470, size: 0.1, name: 'Toronto' },
+                { lat: -33.8688, lng: 151.2093, size: 0.1, name: 'Sydney' },
+                { lat: 48.8566, lng: 2.3522, size: 0.1, name: 'Paris' },
+                { lat: 37.5665, lng: 126.9780, size: 0.1, name: 'Seoul' },
+                { lat: 1.3521, lng: 103.8198, size: 0.1, name: 'Singapore' },
+                { lat: 19.4326, lng: -99.1332, size: 0.1, name: 'Mexico City' },
+            ];
+
+            const connections = [
+                { startLat: 40.7128, startLng: -74.0060, endLat: 51.5074, endLng: -0.1278 },     // USA -> UK
+                { startLat: 40.7128, startLng: -74.0060, endLat: 28.6139, endLng: 77.2090 },     // USA -> India
+                { startLat: 19.0760, startLng: 72.8777, endLat: 1.3521, endLng: 103.8198 },      // India -> Singapore
+                { startLat: 51.5074, startLng: -0.1278, endLat: 52.5200, endLng: 13.4050 },      // UK -> Germany
+                { startLat: 40.7128, startLng: -74.0060, endLat: -23.5505, endLng: -46.6333 },   // USA -> Brazil
+                { startLat: 35.6762, startLng: 139.6503, endLat: 37.7595, endLng: -122.4367 },   // Japan -> USA
+                { startLat: -33.8688, startLng: 151.2093, endLat: 19.0760, endLng: 72.8777 },    // Australia -> India
+            ];
+
+            const myGlobe = Globe({ animateIn: true })
+                (globeContainer)
+                .backgroundColor('rgba(0,0,0,0)')
+                .showGlobe(true)
+                .showAtmosphere(true)
+                .atmosphereColor('#00e5ff')
+                .atmosphereAltitude(0.15)
+                .width(globeContainer.clientWidth)
+                .height(globeContainer.clientHeight)
+                .arcsData(connections)
+                .arcStartLat(d => d.startLat)
+                .arcStartLng(d => d.startLng)
+                .arcEndLat(d => d.endLat)
+                .arcEndLng(d => d.endLng)
+                .arcColor(() => '#00e5ff')
+                .arcDashLength(0.4)
+                .arcDashGap(0.2)
+                .arcDashAnimateTime(1500)
+                .arcStroke(1)
+                .pointsData(markers)
+                .pointLat(d => d.lat)
+                .pointLng(d => d.lng)
+                .pointColor(() => '#00e5ff')
+                .pointAltitude(0.01)
+                .pointRadius(0.5)
+                .ringsData(markers)
+                .ringLat(d => d.lat)
+                .ringLng(d => d.lng)
+                .ringColor(() => '#00e5ff')
+                .ringMaxRadius(2.5)
+                .ringPropagationSpeed(3)
+                .ringRepeatPeriod(1000);
+
+            // Handle interaction (rotation)
+            // Globe.gl sets its domElement to pointer-events:all when controls are active
+            const controls = myGlobe.controls();
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 0.5;
+            controls.enableZoom = false;
+            controls.enablePan = false; // Only allow rotation
+            controls.rotateSpeed = 0.6; // Adjust manual rotation speed
+
+            // Set up a custom black globe material
+            const customGlobeMaterial = new THREE.MeshPhongMaterial({
+                color: 0x000000, // True black
+                transparent: true,
+                opacity: 0.9,     // High opacity to block out background but still blend softly
+                shininess: 0      // Remove glare
+            });
+            myGlobe.globeMaterial(customGlobeMaterial);
+
+            // Fetch GeoJSON for the dotted landmass look
+            fetch('https://raw.githubusercontent.com/vasturiano/globe.gl/master/example/datasets/ne_110m_admin_0_countries.geojson')
+                .then(res => res.json())
+                .then(countries => {
+                    myGlobe.hexPolygonsData(countries.features)
+                        .hexPolygonResolution(3)
+                        .hexPolygonMargin(0.6)      // Slightly thicker base dots
+                        .hexPolygonColor(() => 'rgba(0, 243, 255, 0.45)')
+                        .hexPolygonUse3D(false);
+                });
+
+            // Handle Resize
+            window.addEventListener('resize', () => {
+                myGlobe.width(globeContainer.clientWidth);
+                myGlobe.height(globeContainer.clientHeight);
+            });
+        });
+    </script>
+
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>
