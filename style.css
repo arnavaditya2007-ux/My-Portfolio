@@ -663,11 +663,11 @@ nav {
     left: 0;
     width: 100%;
     height: 100vh;
-    /* Sit ABOVE all section content (z-index:1000) so that backdrop-filter
-       actually blurs real visible elements — text, glows, backgrounds.
-       pointer-events:none keeps all section clicks working normally. */
     z-index: 1050;
     pointer-events: none;
+    /* Perspective parent — pivot rotates in 3D within this space */
+    perspective: 1000px;
+    perspective-origin: center center;
 }
 
 #master-card-pivot {
@@ -680,10 +680,19 @@ nav {
     height: 520px;
     will-change: left, top, opacity, transform;
     pointer-events: auto;
-    /* Re-enable clicks on the card despite container being passthrough */
-    /* CRITICAL: Perspective makes 3D rotations visible */
-    perspective: 1000px;
-    perspective-origin: center center;
+    /* ── GLASSMORPHISM + 3D ROTATION UNIFIED ──────────────────────────────
+       The pivot is now both the glass surface AND the rotating element.
+       #master-card-container provides perspective so the pivot rotates in 3D.
+       All children (content) rotate together with the glass — one unified card.
+       ─────────────────────────────────────────────────────────────────────── */
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow:
+        0 0 40px rgba(0, 243, 255, 0.15),
+        0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 #master-card {
@@ -693,12 +702,11 @@ nav {
     width: 100%;
     height: 100%;
     z-index: 2;
-    /* Content on top of glass */
+    pointer-events: auto;
+    cursor: pointer;
+    /* Fully transparent — pivot above provides the glass surface */
     background: transparent;
     border: none;
-    pointer-events: auto;
-    /* Explicitly clickable */
-    cursor: pointer;
 }
 
 
@@ -794,24 +802,21 @@ nav {
 }
 
 .holo-card {
-    width: 400px;
-    height: 520px;
+    width: 100%;
+    height: 100%;
     padding: 35px;
     border-radius: 20px;
     pointer-events: auto;
     cursor: pointer;
     position: relative;
-    /* THE UNIFIED VISION: Matches Key Highlights glass style */
-    background: rgba(0, 0, 0, 0.81);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1.5px solid rgba(0, 243, 255, 0.3);
-    box-shadow:
-        0 0 40px rgba(0, 243, 255, 0.15),
-        0 20px 70px rgba(0, 0, 0, 0.7);
     display: flex;
     flex-direction: column;
     justify-content: center;
+    /* Glass effect is on #master-card-pivot (the will-change parent).
+       This element stays transparent so the pivot glass shows through. */
+    background: transparent;
+    border: none;
+    box-shadow: none;
 }
 
 .glass-panel {
@@ -946,9 +951,10 @@ nav {
 }
 
 .card-header .role {
-    color: var(--secondary);
+    color: var(--primary);
     font-size: 0.9rem;
     font-weight: 700;
+    text-shadow: 0 0 8px var(--primary-glow);
 }
 
 .stats-grid {
