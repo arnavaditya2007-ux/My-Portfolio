@@ -170,8 +170,8 @@ function initMainAnimations() {
         const totalRY = window.cardRotation.baseRY + window.cardRotation.mouseRY + window.cardRotation.flipRY;
         const totalRX = window.cardRotation.baseRX + window.cardRotation.mouseRX;
 
-        // 3D rotation on the card element (GSAP adds its own perspective automatically)
-        gsap.set(masterCard, { rotationY: totalRY, rotationX: totalRX });
+        // 3D rotation on the PIVOT — glass surface rotates with content as one unified card
+        gsap.set(masterCardPivot, { rotationY: totalRY, rotationX: totalRX });
 
         // Face-swap: show back face once past the 90° edge
         if (!cardFront || !cardBack) return;
@@ -218,16 +218,14 @@ function initMainAnimations() {
         opacity: 1,
         scale: 1
     });
-    // Tell GSAP to use CSS perspective from parent (not inject its own)
-    gsap.set(masterCard, { transformPerspective: 0 });
+    // Perspective comes from #master-card-container CSS — no inline override needed
     // Set initial base rotation on proxy
     window.cardRotation.baseRY = 15;
     window.cardRotation.baseRX = 0;
 
-    // Entrance animation — slide both card and glass in from the right
+    // Entrance animation — slide card in from the right (no opacity fade so blur is instant)
     gsap.from(masterCardPivot, {
         left: '110%',
-        opacity: 0,
         duration: 2.2,
         ease: 'expo.out'
     });
